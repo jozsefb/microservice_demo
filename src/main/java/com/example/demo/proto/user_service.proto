@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_package = "com.example.demo";
+
+package api;
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message UserDto {
+  optional string id = 1;
+  string email = 2;
+  optional string first_name = 3;
+  optional string last_name = 4;
+}
+
+service UserApi {
+  rpc getUser(GetUserRequest) returns (UserDto) {}
+}
