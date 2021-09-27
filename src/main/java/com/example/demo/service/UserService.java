@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -24,7 +26,7 @@ public class UserService {
      * @should return empty if user not found
      */
     public Mono<User> getUser(String id) {
-        return userRepo.findById(id);
+        return userRepo.findById(UUID.fromString(id));
     }
 
     /**

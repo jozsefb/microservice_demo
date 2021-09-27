@@ -4,19 +4,22 @@ import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
+import net.devh.boot.grpc.server.service.GrpcService;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+@Slf4j
 @RequiredArgsConstructor
-@Component
+@GrpcService
 public class UserApi extends ReactorUserApiGrpc.UserApiImplBase {
 
     private final UserService userService;
 
     @Override
     public Mono<UserDto> getUser(Mono<GetUserRequest> request) {
+        log.debug("Get User {}", request);
         return request
                 .log()
                 .map(GetUserRequest::getId)
@@ -26,6 +29,7 @@ public class UserApi extends ReactorUserApiGrpc.UserApiImplBase {
 
     @Override
     public Mono<UserDto> saveUser(Mono<UserDto> request) {
+        log.debug("Save user {}", request);
         return request
                 .log()
                 .map(this::mapToUser)
