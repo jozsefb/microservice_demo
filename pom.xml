@@ -26,10 +26,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-r2dbc</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
 		<!--	DATABASE	-->
 		<dependency>
 			<groupId>org.liquibase</groupId>
@@ -43,11 +39,6 @@
 		<!--	gRPC	-->
 		<dependency>
 			<groupId>io.grpc</groupId>
-			<artifactId>grpc-netty</artifactId>
-			<version>1.41.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.grpc</groupId>
 			<artifactId>grpc-protobuf</artifactId>
 			<version>1.41.0</version>
 		</dependency>
@@ -55,6 +46,11 @@
 			<groupId>io.grpc</groupId>
 			<artifactId>grpc-stub</artifactId>
 			<version>1.41.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.salesforce.servicelibs</groupId>
+			<artifactId>reactor-grpc-stub</artifactId>
+			<version>1.2.0</version>
 		</dependency>
 		<dependency> <!-- necessary for Java 9+ -->
 			<groupId>org.apache.tomcat</groupId>
@@ -124,6 +120,17 @@
 							<goal>compile</goal>
 							<goal>compile-custom</goal>
 						</goals>
+						<configuration>
+							<protocPlugins>
+								<protocPlugin>
+									<id>reactor-grpc</id>
+									<groupId>com.salesforce.servicelibs</groupId>
+									<artifactId>reactor-grpc</artifactId>
+									<version>1.2.0</version>
+									<mainClass>com.salesforce.reactorgrpc.ReactorGrpcGenerator</mainClass>
+								</protocPlugin>
+							</protocPlugins>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

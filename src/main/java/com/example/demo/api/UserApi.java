@@ -2,37 +2,35 @@ package com.example.demo.api;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-import io.grpc.stub.StreamObserver;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
-public class UserApi extends UserApiGrpc.UserApiImplBase {
+public class UserApi extends ReactorUserApiGrpc.UserApiImplBase {
 
     private final UserService userService;
 
     @Override
-    public void getUser(GetUserRequest request, StreamObserver<UserDto> responseObserver) {
-        userService.getUser(request.getId())
-                .map(this::mapToDto)
-                .subscribe(userDto -> {
-                    responseObserver.onNext(userDto);
-                    responseObserver.onCompleted();
-                });
+    public Mono<UserDto> getUser(Mono<GetUserRequest> request) {
+        return request
+                .log()
+                .map(GetUserRequest::getId)
+                .flatMap(userService::getUser)
+                .map(this::mapToDto);
     }
 
     @Override
-    public void saveUser(UserDto request, StreamObserver<UserDto> responseObserver) {
-        userService.saveUser(mapToUser(request))
-                .map(this::mapToDto)
-                .subscribe(userDto -> {
-                    responseObserver.onNext(userDto);
-                    responseObserver.onCompleted();
-                });
+    public Mono<UserDto> saveUser(Mono<UserDto> request) {
+        return request
+                .log()
+                .map(this::mapToUser)
+                .flatMap(userService::saveUser)
+                .map(this::mapToDto);
     }
 
     private UserDto mapToDto(User user) {
